@@ -1,6 +1,6 @@
-name:                blog-examples
+name:                simple-json
 version:             0.1.0.0
-github:              "githubuser/blog-examples"
+github:              "githubuser/simple-json"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"
@@ -17,16 +17,20 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/blog-examples#readme>
+description:         Please see the README on GitHub at <https://github.com/githubuser/simple-json#readme>
 
 dependencies:
 - base >= 4.7 && < 5
+- aeson
+- bytestring
+- process
+- unix
 
 library:
   source-dirs: src
 
 executables:
-  blog-examples-exe:
+  simple-json:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -34,15 +38,4 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - blog-examples
-
-tests:
-  blog-examples-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - blog-examples
+    - simple-json
