@@ -2,3 +2,4 @@ resolver: lts-12.2
 
 packages:
 - ./simple-json
+- ./semi-index
