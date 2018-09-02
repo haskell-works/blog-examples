@@ -1,10 +1,10 @@
 SRC_FILES := $(wildcard *.c)
 
 %.s : %.c
-	gcc -O2 -mavx2 -mbmi2 -fno-tree-vectorize -S $<
+	gcc -O2 -mavx2 -mbmi2 -fno-tree-vectorize -S $< -o $@
 
 %.auto.s : %.c
-	gcc -O2 -mavx2 -mbmi2 -S $<
+	gcc -O2 -mavx2 -mbmi2 -S $< -o $@
 
 %.out : %.c
 	gcc -O2 -mavx2 -mbmi2 -fno-tree-vectorize $< -o $@
