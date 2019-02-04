@@ -1,0 +1,8 @@
+resolver: lts-12.2
+
+packages:
+- .
+
+flags:
+  aeson:
+    cffi: true

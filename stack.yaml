@@ -1,5 +1,6 @@
 resolver: lts-12.2
 
 packages:
+- ./ex-vector
 - ./simple-json
 - ./semi-index
