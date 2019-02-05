@@ -23,8 +23,11 @@ dependencies:
 - base >= 4.7 && < 5
 - aeson
 - bytestring
+- generic-lens
 - ghc-prim
 - hw-bits
+- lens
+- optparse-applicative
 - process
 - unix
 - vector
