@@ -4,7 +4,7 @@
 
 module App.Commands.SumBitVectors where
 
-import App.Commands.Types             (SumBitVectorsOptions (SumBitVectorsOptions))
+import App.Commands.Types                (SumBitVectorsOptions (SumBitVectorsOptions))
 import Control.Applicative
 import Control.Lens
 import Control.Monad
@@ -14,12 +14,13 @@ import Data.Word
 import GHC.Int
 import GHC.Prim
 import GHC.Stats
-import GHC.Word                       hiding (ltWord)
+import GHC.Word                          hiding (ltWord)
 import HaskellWorks.Data.Bits.BitWise
 import Options.Applicative
 import System.Posix.Process
 import System.Process
 
+import qualified HaskellWorks.Data.Vector.Storable as DVS
 import qualified Data.ByteString.Lazy         as BS
 import qualified Data.Vector.Storable         as DVS
 import qualified Data.Vector.Storable.Mutable as DVSM
@@ -50,9 +51,16 @@ sumVector u v carry = DVS.createT $ do
             go w (i + 1) nc
           else return c
 
+sumBitVectors :: [DVS.Vector Word64] -> DVS.Vector Word64
+sumBitVectors _ = DVS.empty
+
 runSumBitVectors :: SumBitVectorsOptions -> IO ()
 runSumBitVectors opts = do
   let filePaths = opts ^. the @"filePaths"
+
+  vs <- forM filePaths DVS.mmap
+  let !sv = sumBitVectors vs
+
   return ()
 
 optsSumBitVectors :: Parser SumBitVectorsOptions
@@ -67,4 +75,4 @@ optsSumBitVectors = SumBitVectorsOptions
       )
 
 cmdSumBitVectors :: Mod CommandFields (IO ())
-cmdSumBitVectors = command "create-index"  $ flip info idm $ runSumBitVectors <$> optsSumBitVectors
+cmdSumBitVectors = command "sum-bit-vectors" $ flip info idm $ runSumBitVectors <$> optsSumBitVectors

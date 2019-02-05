@@ -9,4 +9,3 @@ main :: IO ()
 main = join $ customExecParser
   (prefs $ showHelpOnEmpty <> showHelpOnError)
   (info (commands <**> helper) idm)
-
