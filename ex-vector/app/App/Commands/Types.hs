@@ -7,6 +7,7 @@ module App.Commands.Types
 import Data.Semigroup ((<>))
 import GHC.Generics
 
-newtype SumBitVectorsOptions = SumBitVectorsOptions
-  { filePaths :: [FilePath]
+data SumBitVectorsOptions = SumBitVectorsOptions
+  { filePaths  :: [FilePath]
+  , branchless :: Bool
   } deriving (Eq, Show, Generic)
