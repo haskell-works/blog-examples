@@ -52,7 +52,9 @@ sumVector u v carry = DVS.createT $ do
           else return c
 
 sumBitVectors :: [DVS.Vector Word64] -> DVS.Vector Word64
-sumBitVectors _ = DVS.empty
+sumBitVectors []        = DVS.empty
+sumBitVectors [v]       = v
+sumBitVectors (v:w:vs)  = sumBitVectors (snd (sumVector v w 0):vs)
 
 runSumBitVectors :: SumBitVectorsOptions -> IO ()
 runSumBitVectors opts = do
@@ -61,13 +63,15 @@ runSumBitVectors opts = do
   vs <- forM filePaths DVS.mmap
   let !sv = sumBitVectors vs
 
+  IO.putStrLn $ "Vector length: " <> show (DVS.length sv)
+
   return ()
 
 optsSumBitVectors :: Parser SumBitVectorsOptions
 optsSumBitVectors = SumBitVectorsOptions
   <$> many
       ( strOption
-        (   long "input-a"
+        (   long "input"
         <>  short 'i'
         <>  help "Input JSON file"
         <>  metavar "STRING"
