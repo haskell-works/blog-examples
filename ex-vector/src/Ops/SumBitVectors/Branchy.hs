@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Ops.SumBitVectors.Branchful where
+module Ops.SumBitVectors.Branchy where
 
 import Control.Applicative
 import Control.Lens
@@ -24,25 +24,25 @@ import qualified HaskellWorks.Data.Vector.Storable as DVS
 import qualified System.Environment                as IO
 import qualified System.IO                         as IO
 
-sumCarry :: Word64 -> Word64 -> Bool -> (Word64, Bool)
+sumCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
 sumCarry a b carry = (total, newCarry)
   where preTotal  = a + b
-        total     = if carry then preTotal + 1 else preTotal
-        newCarry  = total < a || total < b || (carry && total < 1)
+        total     = preTotal + carry
+        newCarry  = if total < a .|. b .|. carry then 1 else 0
 
 sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> Word64 -> (Word64, DVS.Vector Word64)
 sumVector u v carry = DVS.createT $ do
   w <- DVSM.new len
-  go w 0 False
+  go w 0 0
   return (undefined, w)
   where len = min (DVS.length u) (DVS.length v)
-        go :: DVSM.MVector s Word64 -> Int -> Bool -> ST s Word64
+        go :: DVSM.MVector s Word64 -> Int -> Word64 -> ST s Word64
         go w i c = if i < len
           then do
             let (t, nc) = sumCarry (DVS.unsafeIndex u i) (DVS.unsafeIndex v i) c
             DVSM.unsafeWrite w i t
             go w (i + 1) nc
-          else return 1
+          else return c
 
 sumBitVectors :: [DVS.Vector Word64] -> DVS.Vector Word64
 sumBitVectors []       = DVS.empty

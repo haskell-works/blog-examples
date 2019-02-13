@@ -26,6 +26,7 @@ import qualified Data.Vector.Storable.Mutable       as DVSM
 import qualified HaskellWorks.Data.Vector.Storable  as DVS
 import qualified Ops.SumBitVectors.Branchful        as BRANCHFUL
 import qualified Ops.SumBitVectors.Branchless       as BRANCHLESS
+import qualified Ops.SumBitVectors.Branchy          as BRANCHY
 import qualified System.Environment                 as IO
 import qualified System.IO                          as IO
 
@@ -34,11 +35,12 @@ runSumBitVectors opts = do
   let filePaths = opts ^. the @"filePaths"
 
   vs <- forM filePaths DVS.mmap
-  let !sv = if opts ^. the @"branchless"
-        then BRANCHLESS.sumBitVectors vs
-        else BRANCHFUL.sumBitVectors  vs
+  let !sv = case opts ^. the @"branchiness" of
+        "branchless" -> BRANCHLESS.sumBitVectors vs
+        "branchy"    -> BRANCHY.sumBitVectors    vs
+        "branchful"  -> BRANCHFUL.sumBitVectors  vs
 
-  IO.putStrLn $ "Vector length: " <> show (DVS.length sv) <> ", Branchless: " <> show (opts ^. the @"branchless")
+  IO.putStrLn $ "Vector length: " <> show (DVS.length sv) <> ", Branchless: " <> show (opts ^. the @"branchiness")
 
   return ()
 
@@ -52,10 +54,10 @@ optsSumBitVectors = SumBitVectorsOptions
         <>  metavar "STRING"
         )
       )
-  <*> switch
-      ( long "branchless"
+  <*> strOption
+      ( long "branchiness"
       <>  short 'b'
-      <>  help "Enable branchless addition"
+      <>  help "Branchiness of addition (branchless|branchy|branchful)"
       )
 
 cmdSumBitVectors :: Mod CommandFields (IO ())

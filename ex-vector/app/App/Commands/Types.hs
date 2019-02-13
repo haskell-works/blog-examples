@@ -8,6 +8,6 @@ import Data.Semigroup ((<>))
 import GHC.Generics
 
 data SumBitVectorsOptions = SumBitVectorsOptions
-  { filePaths  :: [FilePath]
-  , branchless :: Bool
+  { filePaths   :: [FilePath]
+  , branchiness :: String
   } deriving (Eq, Show, Generic)
