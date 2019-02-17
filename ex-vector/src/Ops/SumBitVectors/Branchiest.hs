@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Ops.SumBitVectors.Branchful where
+module Ops.SumBitVectors.Branchiest where
 
 import Control.Applicative
 import Control.Lens
