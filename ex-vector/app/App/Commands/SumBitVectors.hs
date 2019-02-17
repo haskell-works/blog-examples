@@ -25,6 +25,7 @@ import qualified Data.Vector.Storable               as DVS
 import qualified Data.Vector.Storable.Mutable       as DVSM
 import qualified HaskellWorks.Data.Vector.Storable  as DVS
 import qualified Ops.SumBitVectors.Branchiest       as BRANCHIEST
+import qualified Ops.SumBitVectors.Branchier        as BRANCHIER
 import qualified Ops.SumBitVectors.Branchless       as BRANCHLESS
 import qualified Ops.SumBitVectors.Branchy          as BRANCHY
 import qualified System.Environment                 as IO
@@ -38,6 +39,7 @@ runSumBitVectors opts = do
   let !sv = case opts ^. the @"branchiness" of
         "branchless" -> BRANCHLESS.sumBitVectors vs
         "branchy"    -> BRANCHY.sumBitVectors    vs
+        "branchier"  -> BRANCHIER.sumBitVectors  vs
         "branchiest" -> BRANCHIEST.sumBitVectors vs
 
   IO.putStrLn $ "Vector length: " <> show (DVS.length sv) <> ", Branchless: " <> show (opts ^. the @"branchiness")
