@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds        #-}
-{-# LANGUAGE MagicHash        #-}
 {-# LANGUAGE TypeApplications #-}
 
 module App.Commands.SumBitVectors where
@@ -25,6 +24,7 @@ import qualified Data.Vector.Storable               as DVS
 import qualified Data.Vector.Storable.Mutable       as DVSM
 import qualified HaskellWorks.Data.Vector.Storable  as DVS
 import qualified Ops.SumBitVectors.Branchiest       as BRANCHIEST
+import qualified Ops.SumBitVectors.Branchless2      as BRANCHLESS2
 import qualified Ops.SumBitVectors.Branchier        as BRANCHIER
 import qualified Ops.SumBitVectors.Branchless       as BRANCHLESS
 import qualified Ops.SumBitVectors.Branchy          as BRANCHY
@@ -37,10 +37,11 @@ runSumBitVectors opts = do
 
   vs <- forM filePaths DVS.mmap
   let !sv = case opts ^. the @"branchiness" of
-        "branchless" -> BRANCHLESS.sumBitVectors vs
-        "branchy"    -> BRANCHY.sumBitVectors    vs
-        "branchier"  -> BRANCHIER.sumBitVectors  vs
-        "branchiest" -> BRANCHIEST.sumBitVectors vs
+        "branchless" -> BRANCHLESS.sumBitVectors  vs
+        "branchless2"-> BRANCHLESS2.sumBitVectors vs
+        "branchy"    -> BRANCHY.sumBitVectors     vs
+        "branchier"  -> BRANCHIER.sumBitVectors   vs
+        "branchiest" -> BRANCHIEST.sumBitVectors  vs
 
   IO.putStrLn $ "Vector length: " <> show (DVS.length sv) <> ", Branchless: " <> show (opts ^. the @"branchiness")
 
