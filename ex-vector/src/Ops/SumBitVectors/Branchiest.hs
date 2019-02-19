@@ -30,11 +30,11 @@ sumCarry a b carry = (total, newCarry)
         total     = if carry then preTotal + 1 else preTotal
         newCarry  = total < a || total < b || (carry && total < 1)
 
-sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> Word64 -> (Word64, DVS.Vector Word64)
-sumVector u v carry = DVS.createT $ do
+sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
+sumVector u v = DVS.create $ do
   w <- DVSM.new len
   go w 0 False
-  return (undefined, w)
+  return w
   where len = min (DVS.length u) (DVS.length v)
         go :: DVSM.MVector s Word64 -> Int -> Bool -> ST s Word64
         go w i c = if i < len
@@ -47,4 +47,4 @@ sumVector u v carry = DVS.createT $ do
 sumBitVectors :: [DVS.Vector Word64] -> DVS.Vector Word64
 sumBitVectors []       = DVS.empty
 sumBitVectors [v]      = v
-sumBitVectors (v:w:vs) = sumBitVectors (snd (sumVector v w 0):vs)
+sumBitVectors (v:w:vs) = sumBitVectors (sumVector v w:vs)
