@@ -61,4 +61,5 @@ tests:
     - ex-vector
     - hspec
     - hedgehog
+    - hw-bits
     - hw-hspec-hedgehog

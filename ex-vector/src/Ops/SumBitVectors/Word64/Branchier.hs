@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE MagicHash #-}
 
-module Ops.SumBitVectors.Branchless2 where
+module Ops.SumBitVectors.Word64.Branchier where
 
 import Control.Applicative
 import Control.Lens
@@ -25,14 +24,10 @@ import qualified HaskellWorks.Data.Vector.Storable as DVS
 import qualified System.Environment                as IO
 import qualified System.IO                         as IO
 
-ltWord :: Word64 -> Word64 -> Word64
-ltWord (W64# a#) (W64# b#) = fromIntegral (I64# (ltWord# a# b#))
-{-# INLINE ltWord #-}
-
 add :: Word64 -> Word64 -> (Word64, Word64)
 add a b = (total, newCarry)
   where total     = a + b
-        newCarry  = (total `ltWord` a) .|. (total `ltWord` b)
+        newCarry  = if total < a || total < b then 1 else 0
 
 addCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
 addCarry a b carry = (t, carry0 .|. carry1)

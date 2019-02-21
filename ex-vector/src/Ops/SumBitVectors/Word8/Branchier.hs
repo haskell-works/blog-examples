@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE MagicHash #-}
 
-module Ops.SumBitVectors.Branchless where
+module Ops.SumBitVectors.Word8.Branchier where
 
 import Control.Applicative
 import Control.Lens
@@ -25,27 +24,23 @@ import qualified HaskellWorks.Data.Vector.Storable as DVS
 import qualified System.Environment                as IO
 import qualified System.IO                         as IO
 
-ltWord :: Word64 -> Word64 -> Word64
-ltWord (W64# a#) (W64# b#) = fromIntegral (I64# (ltWord# a# b#))
-{-# INLINE ltWord #-}
-
-add :: Word64 -> Word64 -> (Word64, Word64)
+add :: Word8 -> Word8 -> (Word8, Word8)
 add a b = (total, newCarry)
   where total     = a + b
-        newCarry  = total `ltWord` (a .|. b)
+        newCarry  = if total < a || total < b then 1 else 0
 
-addCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
+addCarry :: Word8 -> Word8 -> Word8 -> (Word8, Word8)
 addCarry a b carry = (t, carry0 .|. carry1)
   where (c, carry0) = add a b
         (t, carry1) = add c carry
 
-sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
+sumVector :: DVS.Vector Word8 -> DVS.Vector Word8 -> DVS.Vector Word8
 sumVector u v = DVS.create $ do
   w <- DVSM.new len
   go w 0 0
   return w
   where len = min (DVS.length u) (DVS.length v)
-        go :: DVSM.MVector s Word64 -> Int -> Word64 -> ST s Word64
+        go :: DVSM.MVector s Word8 -> Int -> Word8 -> ST s Word8
         go w i c = if i < len
           then do
             let (t, nc) = addCarry (DVS.unsafeIndex u i) (DVS.unsafeIndex v i) c
@@ -53,7 +48,7 @@ sumVector u v = DVS.create $ do
             go w (i + 1) nc
           else return c
 
-sumBitVectors :: [DVS.Vector Word64] -> DVS.Vector Word64
+sumBitVectors :: [DVS.Vector Word8] -> DVS.Vector Word8
 sumBitVectors []       = DVS.empty
 sumBitVectors [v]      = v
 sumBitVectors (v:w:vs) = sumBitVectors (sumVector v w:vs)

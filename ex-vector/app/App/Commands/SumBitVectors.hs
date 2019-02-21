@@ -19,17 +19,17 @@ import Options.Applicative
 import System.Posix.Process
 import System.Process
 
-import qualified Data.ByteString.Lazy               as BS
-import qualified Data.Vector.Storable               as DVS
-import qualified Data.Vector.Storable.Mutable       as DVSM
-import qualified HaskellWorks.Data.Vector.Storable  as DVS
-import qualified Ops.SumBitVectors.Branchiest       as BRANCHIEST
-import qualified Ops.SumBitVectors.Branchless2      as BRANCHLESS2
-import qualified Ops.SumBitVectors.Branchier        as BRANCHIER
-import qualified Ops.SumBitVectors.Branchless       as BRANCHLESS
-import qualified Ops.SumBitVectors.Branchy          as BRANCHY
-import qualified System.Environment                 as IO
-import qualified System.IO                          as IO
+import qualified Data.ByteString.Lazy                 as BS
+import qualified Data.Vector.Storable                 as DVS
+import qualified Data.Vector.Storable.Mutable         as DVSM
+import qualified HaskellWorks.Data.Vector.Storable    as DVS
+import qualified Ops.SumBitVectors.Word64.Branchiest  as BRANCHIEST
+import qualified Ops.SumBitVectors.Word64.Branchless2 as BRANCHLESS2
+import qualified Ops.SumBitVectors.Word64.Branchier   as BRANCHIER
+import qualified Ops.SumBitVectors.Word64.Branchless  as BRANCHLESS
+import qualified Ops.SumBitVectors.Word64.Branchy     as BRANCHY
+import qualified System.Environment                   as IO
+import qualified System.IO                            as IO
 
 runSumBitVectors :: SumBitVectorsOptions -> IO ()
 runSumBitVectors opts = do
