@@ -49,3 +49,16 @@ executables:
     - ex-vector
     - hw-prim
 
+tests:
+  ex-vector-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - ex-vector
+    - hspec
+    - hedgehog
+    - hw-hspec-hedgehog
