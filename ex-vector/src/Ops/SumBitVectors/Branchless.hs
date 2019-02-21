@@ -29,15 +29,15 @@ ltWord :: Word64 -> Word64 -> Word64
 ltWord (W64# a#) (W64# b#) = fromIntegral (I64# (ltWord# a# b#))
 {-# INLINE ltWord #-}
 
-sumCarry' :: Word64 -> Word64 -> (Word64, Word64)
-sumCarry' a b = (total, newCarry)
+add :: Word64 -> Word64 -> (Word64, Word64)
+add a b = (total, newCarry)
   where total     = a + b
         newCarry  = total `ltWord` (a .|. b)
 
-sumCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
-sumCarry a b carry = (t, carry0 .|. carry1)
-  where (c, carry0) = sumCarry' a b
-        (t, carry1) = sumCarry' c carry
+addCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
+addCarry a b carry = (t, carry0 .|. carry1)
+  where (c, carry0) = add a b
+        (t, carry1) = add c carry
 
 sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
 sumVector u v = DVS.create $ do
@@ -48,7 +48,7 @@ sumVector u v = DVS.create $ do
         go :: DVSM.MVector s Word64 -> Int -> Word64 -> ST s Word64
         go w i c = if i < len
           then do
-            let (t, nc) = sumCarry (DVS.unsafeIndex u i) (DVS.unsafeIndex v i) c
+            let (t, nc) = addCarry (DVS.unsafeIndex u i) (DVS.unsafeIndex v i) c
             DVSM.unsafeWrite w i t
             go w (i + 1) nc
           else return c
