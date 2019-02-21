@@ -35,9 +35,9 @@ add a b = (total, newCarry)
         newCarry  = total `ltWord` (a .|. b)
 
 addCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
-addCarry a b carry = (t, carry0 .|. carry1)
-  where (c, carry0) = add a b
-        (t, carry1) = add c carry
+addCarry a b c = (t, carry0 .|. carry1)
+  where (s, carry0) = add a b
+        (t, carry1) = add s c
 
 sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
 sumVector u v = DVS.create $ do
