@@ -35,7 +35,7 @@ add a b = (total, newCarry)
         newCarry  = total `ltWord` (a .|. b)
 
 addCarry :: Word64 -> Word64 -> Word64 -> (Word64, Word64)
-addCarry a b c = (t, carry0 .|. carry1)
+addCarry a b c = (t, carry0 + carry1)
   where (s, carry0) = add a b
         (t, carry1) = add s c
 

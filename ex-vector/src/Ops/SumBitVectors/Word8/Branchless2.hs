@@ -35,7 +35,7 @@ add a b = (total, newCarry)
         newCarry  = (total `ltWord` a) .|. (total `ltWord` b)
 
 addCarry :: Word8 -> Word8 -> Word8 -> (Word8, Word8)
-addCarry a b carry = (t, carry0 .|. carry1)
+addCarry a b carry = (t, carry0 + carry1)
   where (c, carry0) = add a b
         (t, carry1) = add c carry
 

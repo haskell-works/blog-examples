@@ -30,7 +30,7 @@ add a b = (total, newCarry)
         newCarry  = if total < a .|. b then 1 else 0
 
 addCarry :: Word8 -> Word8 -> Word8 -> (Word8, Word8)
-addCarry a b carry = (t, carry0 .|. carry1)
+addCarry a b carry = (t, carry0 + carry1)
   where (c, carry0) = add a b
         (t, carry1) = add c carry
 
