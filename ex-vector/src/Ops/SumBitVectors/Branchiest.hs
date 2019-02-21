@@ -24,11 +24,15 @@ import qualified HaskellWorks.Data.Vector.Storable as DVS
 import qualified System.Environment                as IO
 import qualified System.IO                         as IO
 
+sumCarry' :: Word64 -> Word64 -> (Word64, Bool)
+sumCarry' a b = (total, newCarry)
+  where total     = a + b
+        newCarry  = total < a || total < b
+
 sumCarry :: Word64 -> Word64 -> Bool -> (Word64, Bool)
-sumCarry a b carry = (total, newCarry)
-  where preTotal  = a + b
-        total     = if carry then preTotal + 1 else preTotal
-        newCarry  = total < a || total < b || (carry && total < 1)
+sumCarry a b carry = (t, carry0 || carry1)
+  where (c, carry0) = sumCarry' a b
+        (t, carry1) = sumCarry' c (if carry then 1 else 0)
 
 sumVector :: DVS.Vector Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
 sumVector u v = DVS.create $ do
